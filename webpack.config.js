@@ -1,8 +1,10 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const webpack = require('webpack');
+const PurgecssPlugin = require('purgecss-webpack-plugin')
+const webpack = require("webpack");
 const path = require("path");
+const glob = require("glob")
 
 module.exports = {
   entry: "./src/index.js",
@@ -29,8 +31,7 @@ module.exports = {
             options: {
               plugins: [
                 require('tailwindcss')(),
-                require('autoprefixer')(),
-                require('cssnano')()
+                require('autoprefixer')()
               ]
             }
           }
@@ -59,6 +60,11 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: "style.css"
+    }),
+    new PurgecssPlugin({
+      paths: glob.sync(
+        path.join(__dirname, 'src', '**/*'), { nodir: true }
+      )
     })
   ]
 };
