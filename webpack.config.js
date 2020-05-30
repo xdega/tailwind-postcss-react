@@ -1,15 +1,15 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const PurgecssPlugin = require('purgecss-webpack-plugin')
+const PurgecssPlugin = require("purgecss-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
-const glob = require("glob")
+const glob = require("glob");
 
 module.exports = {
   entry: "./src/index.js",
   output: {
-    path: path.resolve(process.cwd(), 'dist')
+    path: path.resolve(process.cwd(), "dist"),
   },
   resolve: {
     extensions: [".jsx", ".js"],
@@ -18,7 +18,7 @@ module.exports = {
     rules: [
       {
         test: /.jsx?$/,
-        use: "babel-loader"
+        use: "babel-loader",
       },
       {
         test: /\.scss$/,
@@ -29,13 +29,10 @@ module.exports = {
           {
             loader: "postcss-loader",
             options: {
-              plugins: [
-                require('tailwindcss')(),
-                require('autoprefixer')()
-              ]
-            }
-          }
-        ]
+              plugins: [require("tailwindcss")(), require("autoprefixer")()],
+            },
+          },
+        ],
       },
       {
         test: /\.(jpe?g|png|gif|svg|ico)$/i,
@@ -43,28 +40,26 @@ module.exports = {
           {
             loader: "file-loader",
             options: {
-              outputPath: "assets/"
-            }
-          }
-        ]
-      }
-    ]
+              outputPath: "assets/",
+            },
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new webpack.ProgressPlugin(),
     new CleanWebpackPlugin({
-      verbose: true
+      verbose: true,
     }),
     new HtmlWebpackPlugin({
-      template: "./src/index.html"
+      template: "./src/index.html",
     }),
     new MiniCssExtractPlugin({
-      filename: "style.css"
+      filename: "style.css",
     }),
     new PurgecssPlugin({
-      paths: glob.sync(
-        path.join(__dirname, 'src', '**/*'), { nodir: true }
-      )
-    })
-  ]
+      paths: glob.sync(path.join(__dirname, "src", "**/*"), { nodir: true }),
+    }),
+  ],
 };
