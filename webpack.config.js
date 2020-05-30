@@ -1,65 +1,57 @@
-const path = require("path");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const webpack = require('webpack');
+const path = require("path");
 
-const settings = {
-  distPath: path.join(__dirname, "dist"),
-  srcPath: path.join(__dirname, "src")
-};
-
-function srcPathExtend(subpath) {
-  return path.join(settings.srcPath, subpath)
-}
-
-module.exports = (env, options) => {
-  const isDevMode = options.mode === "development";
-
-  return {
-    devtool: isDevMode ? "source-map" : false,
-    resolve: {
-      extensions: [".jsx", ".js"],
-    },
-    module: {
-      rules: [
-        {
-          test: /.jsx?$/,
-          use: "babel-loader"
-        },
-        {
-          test: /\.scss$/,
-          use: [
-            "style-loader",
-            {
-              loader: "css-loader",
-              options: {
-                sourceMap: isDevMode
-              }
-            },
-            {
-              loader: "postcss-loader",
+module.exports = {
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(process.cwd(), 'dist')
+  },
+  resolve: {
+    extensions: [".jsx", ".js"],
+  },
+  module: {
+    rules: [
+      {
+        test: /.jsx?$/,
+        use: "babel-loader"
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+          },
+          {
+            loader: "postcss-loader",
+          },
+          {
+            loader: "sass-loader"
+          }
+        ]
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg|ico)$/i,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              outputPath: "assets/"
             }
-          ]
-        },
-        {
-          test: /\.(jpe?g|png|gif|svg|ico)$/i,
-          use: [
-            {
-              loader: "file-loader",
-              options: {
-                outputPath: "assets/"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    plugins: [
-      new CleanWebpackPlugin([settings.distPath], {
-        verbose: true
-      }),
-      new HtmlWebpackPlugin({
-        template: srcPathExtend("index.html")
-      })
+          }
+        ]
+      }
     ]
-  };
+  },
+  plugins: [
+    new webpack.ProgressPlugin(),
+    new CleanWebpackPlugin({
+      verbose: true
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html"
+    })
+  ]
 };
